@@ -19,12 +19,15 @@ const Index = () => {
   const { toast } = useToast();
 
   const generateFood = useCallback(() => {
-    const newFood = {
-      x: Math.floor(Math.random() * GRID_SIZE),
-      y: Math.floor(Math.random() * GRID_SIZE),
-    };
+    let newFood;
+    do {
+      newFood = {
+        x: Math.floor(Math.random() * GRID_SIZE),
+        y: Math.floor(Math.random() * GRID_SIZE),
+      };
+    } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
     return newFood;
-  }, []);
+  }, [snake]);
 
   const resetGame = useCallback(() => {
     setSnake(INITIAL_SNAKE);
@@ -87,6 +90,8 @@ const Index = () => {
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      if (!isPlaying) return;
+      
       switch (e.key) {
         case 'ArrowUp':
           if (direction !== 'DOWN') setDirection('UP');
@@ -105,7 +110,7 @@ const Index = () => {
 
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [direction]);
+  }, [direction, isPlaying]);
 
   useEffect(() => {
     if (isPlaying) {

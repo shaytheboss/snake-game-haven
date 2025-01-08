@@ -8,10 +8,17 @@ interface GameBoardProps {
 }
 
 const GameBoard: React.FC<GameBoardProps> = ({ snake, food, gridSize }) => {
-  const grid = Array(gridSize).fill(Array(gridSize).fill(0));
+  // Create a 2D array for the grid
+  const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
 
   return (
-    <div className="inline-grid gap-[1px] bg-gray-700 p-4 rounded-lg">
+    <div 
+      className="inline-grid bg-gray-700 p-4 rounded-lg"
+      style={{
+        gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
+        gap: '1px'
+      }}
+    >
       {grid.map((row, y) =>
         row.map((_, x) => {
           const isSnake = snake.some((segment) => segment.x === x && segment.y === y);
